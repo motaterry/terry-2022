@@ -1,3 +1,0 @@
-module.exports=[59781,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(61739);a.n(d("[project]/Dropbox/Cursor-ai-agent/My design system/design-system-playground/control-center-UI-Page/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},2538,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(61739);a.n(d("[project]/Dropbox/Cursor-ai-agent/My design system/design-system-playground/control-center-UI-Page/node_modules/next/dist/client/components/builtin/global-error.js"))},67836,a=>{"use strict";a.i(59781);var b=a.i(2538);a.n(b)}];
-
-//# sourceMappingURL=1b382_next_dist_client_components_builtin_global-error_dd11aa21.js.map
