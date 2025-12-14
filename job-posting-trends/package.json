@@ -1,0 +1,16 @@
+{
+  "name": "job-posting-trends",
+  "version": "1.0.0",
+  "description": "Job posting trends - automated setup scripts",
+  "scripts": {
+    "setup": "bash setup.sh",
+    "dev": "bash dev.sh",
+    "scrape": "bash run-scraper.sh",
+    "scrape-real": "bash test-real-scraper.sh",
+    "sample-data": "bash generate-sample-data.sh",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
+  }
+}
+

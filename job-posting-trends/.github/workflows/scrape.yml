@@ -1,0 +1,47 @@
+name: Scrape Jobs
+
+on:
+  schedule:
+    # Run hourly at minute 0
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          cd scraper
+          pip install -r requirements.txt
+      
+      - name: Run scraper
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+        run: |
+          cd scraper
+          python scrape_jobs.py
+      
+      - name: Upload database artifact (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jobs-database
+          path: db/jobs.db
+          retention-days: 7
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+{
+  "name": "RedeAgro",
+  "short_name": "RedeAgro",
+  "description": "Veja preço, clima e desempenho da lavoura em segundos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4EFE6",
+  "theme_color": "#668408",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+
+
+

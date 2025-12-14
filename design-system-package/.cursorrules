@@ -1,0 +1,234 @@
+# Design System Package - AI Assistant Prompts
+
+## Quick Reference for AI Assistants
+
+This design system package provides React components built with shadcn/ui, Radix UI, and Tailwind CSS.
+
+## Installation & Setup
+
+```bash
+npm install @your-username/design-system
+npm install react react-dom tailwindcss @tailwindcss/postcss
+```
+
+**Import styles in your CSS:**
+```css
+@import "@your-username/design-system/styles";
+@import "tailwindcss";
+```
+
+## Using Components
+
+### Basic Import Pattern
+
+```tsx
+import { Button, Card, Input } from '@your-username/design-system'
+```
+
+### Available Components
+
+**UI Components:**
+- Button, Input, Label, Card, Select, Tabs, Switch
+- Dialog, Dropdown Menu, Table, Tooltip, Sheet, Toast (Sonner)
+
+**Custom Components:**
+- Skeleton (feedback)
+- AutocompleteInput, CostComparisonCard, AlertSubscriptionCard (forms)
+- ShareBlock (sharing)
+- PriceCard, WeatherCard, NDVICard (data-display)
+- CompareGate, CompareResult (comparison)
+- PageHeader, HeroSection (layout)
+
+## Design Tokens
+
+**ALWAYS use design tokens, NEVER hardcoded values:**
+
+```tsx
+// ✅ CORRECT - Use tokens
+<Button className="bg-primary text-primary-foreground">
+  Click me
+</Button>
+
+// ❌ WRONG - Hardcoded colors
+<Button className="bg-[#2406%] text-white">
+  Click me
+</Button>
+```
+
+### Available Token Classes
+
+- Colors: `bg-primary`, `text-primary-foreground`, `bg-accent`, `bg-success`, `bg-warning`, `bg-danger`, `bg-info`
+- Radius: `rounded-sm`, `rounded-md`, `rounded-lg`
+- Borders: `border-border`
+- Backgrounds: `bg-background`, `bg-card`, `bg-muted`
+
+## Component Patterns
+
+### Button Example
+
+```tsx
+import { Button } from '@your-username/design-system'
+
+// Variants: default, destructive, outline, secondary, ghost, link
+// Sizes: default, sm, lg, icon
+
+<Button variant="default" size="default">Click me</Button>
+<Button variant="destructive" size="sm">Delete</Button>
+<Button variant="outline">Cancel</Button>
+```
+
+### Card Example
+
+```tsx
+import { Card, CardHeader, CardTitle, CardContent } from '@your-username/design-system'
+
+<Card>
+  <CardHeader>
+    <CardTitle>Title</CardTitle>
+  </CardHeader>
+  <CardContent>
+    Content here
+  </CardContent>
+</Card>
+```
+
+### Form Example
+
+```tsx
+import { Input, Label, Button } from '@your-username/design-system'
+
+<div className="space-y-2">
+  <Label htmlFor="email">Email</Label>
+  <Input id="email" type="email" placeholder="Enter email" />
+  <Button type="submit">Submit</Button>
+</div>
+```
+
+## Library Versions (for Context7)
+
+When using Context7 in prompts, specify these versions:
+
+```
+react@19.2.0
+react-dom@19.2.0
+@radix-ui/react-dialog@1.1.15
+@radix-ui/react-dropdown-menu@2.1.16
+@radix-ui/react-label@2.1.7
+@radix-ui/react-select@2.2.6
+@radix-ui/react-slot@1.2.3
+@radix-ui/react-switch@1.2.6
+@radix-ui/react-tabs@1.1.13
+@radix-ui/react-tooltip@1.2.8
+class-variance-authority@0.7.1
+clsx@2.1.1
+tailwind-merge@3.3.1
+lucide-react@0.548.0
+tailwindcss@4
+```
+
+## Prompt Template for AI Assistants
+
+```
+Use the @your-username/design-system package:
+
+REQUIREMENTS:
+- Import components from '@your-username/design-system'
+- Use design tokens (bg-primary, not hardcoded colors)
+- Follow component API patterns shown in examples
+- Use Tailwind classes that map to design tokens
+- Maintain consistency with existing design system patterns
+
+[Your specific task here]
+```
+
+## Common Patterns
+
+### Creating a Form
+
+```tsx
+import { Card, CardHeader, CardTitle, CardContent } from '@your-username/design-system'
+import { Input, Label, Button } from '@your-username/design-system'
+
+export function MyForm() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Form Title</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Name</Label>
+          <Input id="name" />
+        </div>
+        <Button type="submit">Submit</Button>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+### Using Custom Components
+
+```tsx
+import { PriceCard, WeatherCard, Skeleton } from '@your-username/design-system'
+
+// PriceCard example
+<PriceCard 
+  title="Product Name"
+  price={99.99}
+  currency="USD"
+/>
+
+// WeatherCard example
+<WeatherCard 
+  location="New York"
+  temperature={72}
+  condition="sunny"
+/>
+
+// Skeleton loading
+<Skeleton className="h-4 w-full" />
+```
+
+## TypeScript Support
+
+All components are fully typed. Use TypeScript for better autocomplete:
+
+```tsx
+import type { ButtonProps } from '@your-username/design-system'
+
+const MyButton: React.FC<ButtonProps> = (props) => {
+  return <Button {...props} />
+}
+```
+
+## Styling Guidelines
+
+1. **Use design tokens** - Never hardcode colors, spacing, or radius
+2. **Use Tailwind utilities** - Classes like `space-y-4`, `flex`, `grid`
+3. **Follow component variants** - Use built-in variants before custom styling
+4. **Maintain consistency** - Follow patterns from existing components
+
+## Troubleshooting
+
+**Styles not working?**
+- Ensure you've imported the styles: `@import "@your-username/design-system/styles"`
+- Make sure Tailwind CSS is configured in your project
+
+**Components not found?**
+- Check package installation: `npm list @your-username/design-system`
+- Verify import path matches package exports
+
+**Type errors?**
+- Ensure React types are installed: `npm install @types/react @types/react-dom`
+- Check TypeScript version compatibility
+
+## See Also
+
+- Package README: `README.md`
+- Setup Guide: `SETUP.md`
+- Component Documentation: Check Storybook (if available)
+
+
+
+

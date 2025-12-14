@@ -1,0 +1,678 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Fill-in animation for range bars */
+@keyframes fillIn {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target-width, 0%);
+  }
+}
+
+@keyframes markerMove {
+  from {
+    left: 0%;
+  }
+  to {
+    left: var(--target-left, 0%);
+  }
+}
+
+/* Note: Shimmer effect removed - range bars now use simple fill animation */
+
+/* Tailwind CSS v4 @theme directive - valid Tailwind syntax */
+/* CSS language server warning suppressed via .vscode/settings.json */
+@theme {
+  /* Non-color tokens only - colors defined in :root */
+  --radius-sm: 0;
+  --radius: 0;
+  --shadow-card: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+:root {
+  /* shadcn/ui core tokens - HSL components (no hsl() wrapper) */
+  --background: 30 14% 90%;        /* #F4EFE6 - clay/beige */
+  --foreground: 187 89% 11%;       /* #032F35 - dark teal-green */
+  
+  --card: 0 0% 100%;                /* #FFFFFF - white */
+  --card-foreground: 187 89% 11%; /* #032F35 */
+  
+  --popover: 0 0% 100%;             /* #FFFFFF */
+  --popover-foreground: 187 89% 11%; /* #032F35 */
+  
+  /* Brand colors - HSL components */
+  --primary: 79 80% 44%;           /* #92CB17 - Green with hue 79 */
+  --primary-foreground: 0 0% 100%;  /* #FFFFFF - white */
+  --primary-70: hsl(79deg 83% 59% / 83%);  /* #B5ED3E - Hero banner overlay */
+  --primary-70-solid: 79 83% 59%;  /* #B5ED3E - Solid version for buttons */
+  
+  --secondary: 24 14% 32%;          /* #6B5A4A - soil brown */
+  --secondary-foreground: 0 0% 100%; /* #FFFFFF */
+  
+  --muted: 30 14% 90%;              /* #F4EFE6 - clay/beige */
+  --muted-foreground: 187 89% 11%;  /* #032F35 */
+  --placeholder: 187 89% 11%;        /* Same as foreground - will use opacity for lighter shade */
+  
+  --accent: 99 20% 60%;             /* #9DB89A - soft olive */
+  --accent-foreground: 187 89% 11%; /* #032F35 */
+  
+  --destructive: 0 84% 60%;         /* #dc2626 - red-600 */
+  --destructive-foreground: 0 0% 98%; /* near white */
+  
+  --border: 99 20% 60%;             /* #9DB89A - soft olive */
+  --input: 30 6% 80%;               /* #D4CEC1 */
+  --ring: 79 80% 44%;              /* Matches primary */
+  
+  --radius: 0;
+  
+  /* Yellow accent - for search button */
+  --yellow: 48 100% 42%;            /* #D9BC00 */
+  
+  /* Semantic color tokens - HSL components */
+  --success: 142 71% 45%;           /* #16a34a - green-600 */
+  --success-bg: 142 71% 95%;        /* #dcfce7 - green-100 */
+  --success-text: 142 71% 30%;      /* #15803d - green-700 */
+  --success-text-small: 142 71% 25%; /* #166534 - green-800 */
+  
+  --danger: 0 84% 60%;              /* #dc2626 - red-600 */
+  --danger-bg: 0 84% 95%;           /* #fee2e2 - red-100 */
+  --danger-text: 0 84% 40%;         /* #b91c1c - red-700 */
+  --danger-text-small: 0 84% 35%;  /* #991b1b - red-800 */
+  
+  --warning: 38 96% 50%;            /* #f59e0b - amber-500 */
+  --warning-bg: 38 96% 90%;         /* #fef3c7 - amber-100 */
+  --warning-text: 38 96% 44%;      /* #d97706 - amber-700 */
+  
+  --info: 217 91% 60%;              /* #2563eb - blue-600 */
+  --info-bg: 217 91% 95%;           /* #dbeafe - blue-100 */
+  --info-text: 217 91% 38%;        /* #1e40af - blue-700 */
+  
+  /* Card background tokens - contrast-safe for small text (4.5:1 minimum) */
+  --card-success-bg: 142 71% 95%;   /* #dcfce7 - green-100 */
+  --card-success-text: 142 71% 30%;  /* #15803d - green-700 (4.5:1 contrast) */
+  --card-success-text-small: 142 71% 25%; /* #166534 - green-800 (5.2:1 contrast) */
+  
+  --card-danger-bg: 0 84% 95%;      /* #fee2e2 - red-100 */
+  --card-danger-text: 0 84% 40%;    /* #b91c1c - red-700 (4.5:1 contrast) */
+  --card-danger-text-small: 0 84% 35%; /* #991b1b - red-800 (5.1:1 contrast) */
+  
+  --card-warning-bg: 38 96% 90%;    /* #fef3c7 - amber-100 */
+  --card-warning-text: 38 96% 44%;  /* #d97706 - amber-700 (4.5:1 contrast) */
+  
+  --card-info-bg: 217 91% 95%;      /* #dbeafe - blue-100 */
+  --card-info-text: 217 91% 38%;    /* #1e40af - blue-700 (4.5:1 contrast) */
+  
+  /* Legacy RGB values for rgba() usage (deprecated - prefer HSL with alpha) */
+  --background-rgb: 244, 239, 230;
+  --background-95: hsl(30 14% 90% / 0.95); /* rgba(244, 239, 230, 0.95) */
+  
+  /* Typography */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Spacing & Radius */
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+}
+
+/* Dark theme support (optional) */
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 20% 98%;
+  --card: 222.2 84% 6%;
+  --card-foreground: 210 20% 98%;
+  --popover: 222.2 84% 6%;
+  --popover-foreground: 210 20% 98%;
+  --primary: 79 80% 50%;           /* Lighter green for dark mode */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 24 14% 28%;         /* Darker brown for dark mode */
+  --secondary-foreground: 0 0% 100%;
+  --muted: 222.2 20% 10%;
+  --muted-foreground: 214 12% 65%;
+  --placeholder: 214 12% 75%;        /* Brighter for dark mode */
+  --accent: 99 20% 52%;            /* Darker olive for dark mode */
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 72% 40%;        /* Darker red for dark mode */
+  --destructive-foreground: 0 0% 98%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  --ring: 79 80% 50%;
+}
+
+/* Optional brand theme variants */
+:root[data-theme="ocean"] {
+  --primary: 205 90% 45%;
+  --accent: 190 70% 40%;
+  --secondary: 230 25% 24%;
+  --ring: 205 90% 45%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Mobile touch improvements */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Typography - Archivo Black for H1 headings */
+/* Note: Font size is now controlled by Tailwind classes in components for responsive design */
+h1 {
+  font-family: 'Archivo Black', 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  /* font-size removed - controlled by Tailwind responsive classes */
+  letter-spacing: 0;
+}
+
+/* Smooth transitions for interactive elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Focus visible for accessibility - exclude inputs */
+*:focus-visible:not(input):not(textarea) {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Ensure border color is available for Tailwind utilities */
+.border-border {
+  border-color: hsl(var(--border));
+}
+
+/* Screen reader only - visually hidden but accessible to assistive tech */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Ensure inputs maintain outline style - no background on focus */
+input,
+input:focus,
+input:focus-visible,
+input:focus-within,
+input[type="text"],
+input[type="text"]:focus,
+input[type="text"]:focus-visible {
+  background-color: transparent !important;
+  background: transparent !important;
+  outline: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Duo search inputs - white text for green background */
+.duo-search-container input,
+.duo-search-container input:focus,
+.duo-search-container input:focus-visible,
+form[aria-label="Buscar cultura e localização"] input,
+form[aria-label="Buscar cultura e localização"] input:focus,
+form[aria-label="Buscar cultura e localização"] input:focus-visible {
+  color: white !important;
+}
+
+/* Tel inputs and other form inputs on white background - use foreground color */
+input[type="tel"],
+input[type="tel"]:focus,
+input[type="tel"]:focus-visible,
+input[type="email"],
+input[type="email"]:focus,
+input[type="email"]:focus-visible {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Increase font weight when input has value (filled state) */
+input:not(:placeholder-shown),
+input[value]:not([value=""]),
+input:valid:not(:placeholder-shown) {
+  font-weight: 600 !important;
+}
+
+/* Prevent browser autofill from changing background - regular inputs use foreground color */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-webkit-autofill:focus-visible {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Specific rules for duo-search inputs with autofill - Chrome/Safari */
+.duo-search-container input:-webkit-autofill,
+.duo-search-container input:-webkit-autofill:hover,
+.duo-search-container input:-webkit-autofill:focus,
+.duo-search-container input:-webkit-autofill:active,
+.duo-search-container input:-webkit-autofill:focus-visible,
+form[aria-label="Buscar cultura e localização"] input:-webkit-autofill,
+form[aria-label="Buscar cultura e localização"] input:-webkit-autofill:hover,
+form[aria-label="Buscar cultura e localização"] input:-webkit-autofill:focus,
+form[aria-label="Buscar cultura e localização"] input:-webkit-autofill:active,
+form[aria-label="Buscar cultura e localização"] input:-webkit-autofill:focus-visible {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.9) !important;
+  background-color: transparent !important;
+  background: transparent !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Firefox autofill override */
+.duo-search-container input:-moz-autofill,
+.duo-search-container input:-moz-autofill-preview,
+form[aria-label="Buscar cultura e localização"] input:-moz-autofill,
+form[aria-label="Buscar cultura e localização"] input:-moz-autofill-preview {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: none !important;
+}
+
+/* Additional override for any blue backgrounds */
+input[style*="background"],
+input[style*="background-color"] {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Placeholder text styling - light shade of foreground color using opacity */
+input::placeholder,
+textarea::placeholder,
+input[type="tel"]::placeholder,
+input[type="text"]::placeholder {
+  color: hsl(var(--foreground) / 0.35) !important;
+  opacity: 1;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder,
+input[type="tel"]::-webkit-input-placeholder,
+input[type="text"]::-webkit-input-placeholder {
+  color: hsl(var(--foreground) / 0.35) !important;
+  opacity: 1;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder,
+input[type="tel"]::-moz-placeholder,
+input[type="text"]::-moz-placeholder {
+  color: hsl(var(--foreground) / 0.35) !important;
+  opacity: 1;
+}
+
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder,
+input[type="tel"]:-ms-input-placeholder,
+input[type="text"]:-ms-input-placeholder {
+  color: hsl(var(--foreground) / 0.35) !important;
+  opacity: 1;
+}
+
+/* Specific override for tel inputs to ensure placeholder color is applied */
+input[type="tel"]::placeholder,
+input[type="tel"]::-webkit-input-placeholder,
+input[type="tel"]::-moz-placeholder {
+  color: hsl(var(--foreground) / 0.35) !important;
+  opacity: 1 !important;
+}
+
+/* Ensure placeholder color in cards */
+[class*="Card"] input[type="tel"]::placeholder,
+[class*="Card"] input[type="tel"]::-webkit-input-placeholder,
+[class*="Card"] input[type="tel"]::-moz-placeholder {
+  color: hsl(var(--foreground) / 0.35) !important;
+  opacity: 1 !important;
+}
+
+/* Hero section text color override - dark text on bright green background */
+section[class*="relative"] .text-white,
+section[class*="relative"] p.text-white,
+section[class*="relative"] h1.text-white {
+  color: #032F35 !important;
+}
+
+/* Ensure white text color at sm breakpoint - more specific rule */
+@media (min-width: 640px) {
+  /* Target Hero section paragraphs specifically */
+  section p.text-white,
+  section .text-white {
+    color: #032F35 !important;
+  }
+  
+  /* Specifically for elements with sm:text-base */
+  [class*="sm:text-base"][class*="text-white"],
+  [class*="text-white"][class*="sm:text-base"],
+  p[class*="text-white"][class*="sm:text-base"] {
+    color: #032F35 !important;
+  }
+}
+
+/* ============================================================================
+ * 🔒 LOCKED STYLES - Duo Search Component
+ * ============================================================================
+ * 
+ * These styles are LOCKED and context-specific to the Hero section's
+ * bright green background overlay. DO NOT modify or reuse elsewhere.
+ * 
+ * Context: Hero section with var(--primary-70) green overlay
+ * Purpose: High contrast white-on-green for visibility
+ * 
+ * ⚠️ All !important rules are intentional to prevent style conflicts
+ * 
+ * See: DUO_SEARCH_STYLE_LOCK.md for full documentation
+ * ============================================================================
+ */
+
+/* Dark-themed outline styling for duo search input (SearchBar) */
+/* Dark text and borders for contrast against bright green hero */
+.duo-search-container .duo-search-input,
+form[aria-label="Buscar cultura e localização"] > div {
+  background-color: transparent !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.duo-search-container input,
+.duo-search-container input[type="text"],
+form[aria-label="Buscar cultura e localização"] input,
+form[aria-label="Buscar cultura e localização"] input[type="text"],
+.duo-search-container input:not(:placeholder-shown),
+.duo-search-container input[value]:not([value=""]),
+form[aria-label="Buscar cultura e localização"] input:not(:placeholder-shown),
+form[aria-label="Buscar cultura e localização"] input[value]:not([value=""]) {
+  background-color: transparent !important;
+  color: rgba(3, 47, 53, 0.9) !important; /* #032F35/90 */
+  transition: background-color 0.2s ease, border-color 0.2s ease !important;
+}
+
+/* Unique text size for duo-search inputs: 1.25rem (text-xl) instead of standard 1rem */
+@media (min-width: 640px) {
+  .duo-search-container input,
+  .duo-search-container input[type="text"],
+  form[aria-label="Buscar cultura e localização"] input,
+  form[aria-label="Buscar cultura e localização"] input[type="text"] {
+    font-size: 1.25rem !important; /* text-xl - unique size for hero search */
+  }
+}
+
+.duo-search-container input::placeholder,
+form[aria-label="Buscar cultura e localização"] input::placeholder {
+  color: rgba(3, 47, 53, 0.6) !important; /* #032F35/60 */
+}
+
+.duo-search-container .border-white\/50,
+form[aria-label="Buscar cultura e localização"] .border-white\/50 {
+  border-color: rgba(3, 47, 53, 0.5) !important; /* #032F35/50 */
+  transition: border-color 0.2s ease !important;
+}
+
+.duo-search-container .border-white\/80,
+form[aria-label="Buscar cultura e localização"] .border-white\/80 {
+  border-color: rgba(3, 47, 53, 0.8) !important; /* #032F35/80 */
+}
+
+/* Hover effects for outlined inputs */
+.duo-search-container .duo-search-input:hover,
+form[aria-label="Buscar cultura e localização"] > div:hover {
+  border-color: rgba(3, 47, 53, 0.75) !important; /* #032F35/75 */
+}
+
+.duo-search-container input:hover,
+form[aria-label="Buscar cultura e localização"] input:hover {
+  background-color: rgba(3, 47, 53, 0.08) !important; /* #032F35/8 */
+}
+
+.duo-search-container input:focus,
+.duo-search-container input:focus-visible,
+form[aria-label="Buscar cultura e localização"] input:focus,
+form[aria-label="Buscar cultura e localização"] input:focus-visible {
+  background-color: transparent !important;
+}
+
+.duo-search-container input[id="cultura-input"]:hover,
+form[aria-label="Buscar cultura e localização"] input[id="cultura-input"]:hover {
+  border-right-color: rgba(3, 47, 53, 0.65) !important; /* #032F35/65 */
+  background-color: rgba(3, 47, 53, 0.08) !important; /* #032F35/8 */
+}
+
+.duo-search-container input[id="cultura-input"]:focus,
+.duo-search-container input[id="cultura-input"]:focus-visible,
+form[aria-label="Buscar cultura e localização"] input[id="cultura-input"]:focus,
+form[aria-label="Buscar cultura e localização"] input[id="cultura-input"]:focus-visible {
+  background-color: transparent !important;
+}
+
+.duo-search-container input[id="localizacao-input"]:hover,
+form[aria-label="Buscar cultura e localização"] input[id="localizacao-input"]:hover {
+  background-color: rgba(3, 47, 53, 0.08) !important; /* #032F35/8 */
+}
+
+.duo-search-container input[id="localizacao-input"]:focus,
+.duo-search-container input[id="localizacao-input"]:focus-visible,
+form[aria-label="Buscar cultura e localização"] input[id="localizacao-input"]:focus,
+form[aria-label="Buscar cultura e localização"] input[id="localizacao-input"]:focus-visible {
+  background-color: transparent !important;
+}
+
+.duo-search-container .bg-white\/30,
+form[aria-label="Buscar cultura e localização"] .bg-white\/30 {
+  background-color: rgba(3, 47, 53, 0.3) !important; /* #032F35/30 */
+}
+
+.duo-search-container .bg-white\/40,
+form[aria-label="Buscar cultura e localização"] .bg-white\/40 {
+  background-color: rgba(3, 47, 53, 0.4) !important; /* #032F35/40 */
+}
+
+/* Dropdown suggestions - light theme (not dark) */
+.duo-search-container [role="listbox"],
+form[aria-label="Buscar cultura e localização"] ~ * [role="listbox"],
+form[aria-label="Buscar cultura e localização"] [role="listbox"] {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--card-foreground)) !important;
+}
+
+.duo-search-container [role="listbox"] button,
+form[aria-label="Buscar cultura e localização"] [role="listbox"] button {
+  color: hsl(var(--card-foreground)) !important;
+}
+
+.duo-search-container [role="listbox"] button:hover,
+form[aria-label="Buscar cultura e localização"] [role="listbox"] button:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Ensure button hover states work inside cards */
+/* Target buttons with bg-primary class (default variant) */
+button.bg-primary:hover:not(:disabled):not([disabled]) {
+  background-color: hsl(var(--primary-70-solid) / 0.9) !important;
+  color: #032F35 !important;
+}
+
+button.bg-primary:active:not(:disabled):not([disabled]) {
+  background-color: hsl(var(--primary-70-solid) / 0.82) !important;
+  color: #032F35 !important;
+}
+
+/* Ensure all buttons with bg-primary use dark text */
+button.bg-primary,
+button[class*="bg-primary"] {
+  background-color: hsl(var(--primary-70-solid)) !important;
+  color: #032F35 !important;
+}
+
+/* Target buttons inside cards specifically */
+.card button.bg-primary:hover:not(:disabled):not([disabled]),
+[class*="Card"] button.bg-primary:hover:not(:disabled):not([disabled]) {
+  background-color: hsl(var(--primary-70-solid) / 0.9) !important;
+  color: #032F35 !important;
+}
+
+[class*="Card"] button.bg-primary:active:not(:disabled):not([disabled]) {
+  background-color: hsl(var(--primary-70-solid) / 0.82) !important;
+  color: #032F35 !important;
+}
+
+[class*="Card"] button.bg-primary,
+[class*="Card"] button[class*="bg-primary"] {
+  background-color: hsl(var(--primary-70-solid)) !important;
+  color: #032F35 !important;
+}
+
+/* Ensure outline button hover states work - use 6% black */
+button.border-border:hover:not(:disabled):not([disabled]) {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+button.border-border:active:not(:disabled):not([disabled]) {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+[class*="Card"] button.border-border:hover:not(:disabled):not([disabled]) {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+[class*="Card"] button.border-border:active:not(:disabled):not([disabled]) {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Use primary-70 with dark text for all bg-primary elements */
+button.bg-primary,
+button[class*="bg-primary"],
+[class*="SelectTrigger"][class*="bg-primary"],
+[class*="SelectItem"][class*="bg-primary"],
+select[class*="bg-primary"],
+[role="button"][class*="bg-primary"] {
+  background-color: hsl(var(--primary-70-solid)) !important;
+  color: #032F35 !important;
+}
+
+/* Ensure select items with primary background use white text */
+[class*="SelectItem"][data-highlighted],
+[class*="SelectItem"]:focus {
+  background-color: hsl(var(--accent) / 0.5) !important;
+}
+
+.sr-only:focus,
+.sr-only:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  z-index: 9999;
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+.max-w-\[700px\] {
+  max-width: 1000px;
+}
+
+/* Ensure Recharts containers are transparent to show gradient background */
+.recharts-wrapper,
+.recharts-responsive-container,
+.recharts-surface {
+  background: transparent !important;
+}
+
+/* Ensure PriceCardImage gradient is visible - override any Card backgrounds */
+[class*="PriceCardImage"] > div[class*="bg-gradient"] {
+  background: linear-gradient(to bottom right, hsl(var(--primary) / 0.8), hsl(var(--background)), hsl(var(--primary) / 0.9)) !important;
+}
+
+/* Checkbox styles - solid green fill with white checkmark */
+input[type="checkbox"]:checked ~ div,
+div.bg-primary.border-primary {
+  background-color: hsl(var(--primary)) !important;
+  border-color: hsl(var(--primary)) !important;
+}
+
+input[type="checkbox"]:checked ~ div svg,
+div.bg-primary svg {
+  color: hsl(var(--foreground)) !important;
+  opacity: 1 !important;
+}
+
+/* Results page - Force primary color for focus rings */
+/* Override global input rules for results page - must be more specific */
+#main-content input:focus-visible,
+#main-content input[type="text"]:focus-visible,
+#main-content input[type="tel"]:focus-visible,
+#main-content button:focus-visible,
+#main-content [role="button"]:focus-visible {
+  --tw-ring-color: hsl(var(--primary)) !important;
+  box-shadow: 0 0 0 1px hsl(var(--primary)) !important;
+  outline: 1px solid hsl(var(--primary)) !important;
+  outline-offset: 1px !important;
+}
+
+/* Caret color should match text color */
+#main-content input,
+#main-content textarea {
+  caret-color: hsl(var(--foreground)) !important;
+}
+
+/* Mobile touch improvements - prevent double-tap zoom on interactive elements */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Improve mobile text readability - ensure minimum font size */
+@media (max-width: 640px) {
+  /* Increase minimum readable font size on mobile */
+  body {
+    font-size: 16px; /* Prevents iOS zoom on input focus */
+  }
+  
+  /* Ensure small text is still readable */
+  .text-\[10px\] {
+    font-size: 0.75rem; /* 12px minimum */
+  }
+}
