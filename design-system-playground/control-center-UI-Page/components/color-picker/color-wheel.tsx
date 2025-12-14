@@ -120,8 +120,8 @@ export function ColorWheel() {
 
   const handleEnd = useCallback(() => {
     setIsDragging(false)
-    // Sync rotation offset with current hue when drag ends
-    rotationOffsetRef.current = theme.primary.h
+    // Sync rotation angle with current hue when drag ends
+    setRotationAngle(theme.primary.h)
     previousAngleRef.current = null
   }, [theme.primary.h])
 
