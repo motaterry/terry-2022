@@ -264,8 +264,8 @@ export function adjustColorForMode(
   const hsl = hexToHsl(hex)
   
   if (isDark) {
-    // In dark mode, darken the color slightly
-    hsl.l = Math.max(0, hsl.l - amount)
+    // In dark mode, lighten the color for better visibility
+    hsl.l = Math.min(100, hsl.l + amount)
   } else {
     // In light mode, lighten the color slightly  
     hsl.l = Math.min(100, hsl.l + amount)

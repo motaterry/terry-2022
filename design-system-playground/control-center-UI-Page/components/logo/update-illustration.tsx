@@ -45,11 +45,11 @@ export function UpdateIllustration({
   const baseAccent = accentColor ?? "#BC672B"
   const colors = {
     // Adjust accent color: darker in dark mode, lighter in light mode
-    accent: adjustColorForMode(baseAccent, isDark, 10),
+    accent: adjustColorForMode(baseAccent, isDark, isDark ? 30 : 10),
     surface: surfaceColor ?? (isDark ? "#525252" : "#F3F4F6"),
     darker: darkerColor ?? (isDark ? "#3F3F46" : "#E5E7EB"),
     shadow: shadowColor ?? (isDark ? "#27272A" : "#D1D5DB"),
-    stroke: strokeColor ?? (isDark ? "#18181B" : "#9CA3AF"),
+    stroke: strokeColor ?? (isDark ? "#18181B" : "#6B7280"),
     // Semi-transparent shadow
     shadowTransparent: isDark ? "#0A0A0A" : "#F3F4F6",
   }
