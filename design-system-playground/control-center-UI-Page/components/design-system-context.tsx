@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react"
 
-type ButtonTextColor = "dark" | "light"
+export type ButtonTextColor = "dark" | "light" | "auto"
 
 interface DesignSystemContextType {
   buttonTextColor: ButtonTextColor
@@ -14,20 +14,30 @@ interface DesignSystemContextType {
 const DesignSystemContext = createContext<DesignSystemContextType | undefined>(undefined)
 
 export function DesignSystemProvider({ children }: { children: React.ReactNode }) {
-  const [buttonTextColor, setButtonTextColorState] = useState<ButtonTextColor>(() => {
-    if (typeof window !== "undefined") {
-      return (localStorage.getItem("buttonTextColor") as ButtonTextColor) || "light"
-    }
-    return "light"
-  })
+  // Always start with default values to match server render - default to "auto" for accessibility
+  const [buttonTextColor, setButtonTextColorState] = useState<ButtonTextColor>("auto")
+  const [borderRadius, setBorderRadiusState] = useState<number>(8)
 
-  const [borderRadius, setBorderRadiusState] = useState<number>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("borderRadius")
-      return saved ? parseInt(saved, 10) : 8
+  // Load from localStorage after hydration (client-side only)
+  // Note: Default is always "auto" - only load saved value if user explicitly set it
+  useEffect(() => {
+    const savedButtonTextColor = localStorage.getItem("buttonTextColor") as ButtonTextColor
+    // Only load saved value if it exists and is valid, otherwise keep default "auto"
+    if (savedButtonTextColor && (savedButtonTextColor === "dark" || savedButtonTextColor === "light" || savedButtonTextColor === "auto")) {
+      setButtonTextColorState(savedButtonTextColor)
+    } else {
+      // Ensure default is "auto" if no valid saved value
+      setButtonTextColorState("auto")
     }
-    return 8
-  })
+
+    const savedBorderRadius = localStorage.getItem("borderRadius")
+    if (savedBorderRadius) {
+      const parsed = parseInt(savedBorderRadius, 10)
+      if (!isNaN(parsed)) {
+        setBorderRadiusState(parsed)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     const root = document.documentElement

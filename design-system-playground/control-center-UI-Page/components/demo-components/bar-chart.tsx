@@ -2,9 +2,10 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { useTheme } from "@/components/theme-context"
+import { useDesignSystem } from "@/components/design-system-context"
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 
 const data = [
   { name: "Mon", value1: 40, value2: 30 },
@@ -18,8 +19,120 @@ const data = [
 
 export function BarChartDemo() {
   const { mode } = useTheme()
+  const { borderRadius } = useDesignSystem()
   const isDark = mode === "dark"
   const [activeFilter, setActiveFilter] = useState("7D")
+  const chartRef = useRef<HTMLDivElement>(null)
+  
+  // Calculate bar corner radius based on design system setting (capped for bars)
+  const barRadius = Math.min(borderRadius, 12)
+
+  // Calculate hover colors and apply to rectangles
+  useEffect(() => {
+    if (!chartRef.current) return
+
+    const root = document.documentElement
+    const primaryH = getComputedStyle(root).getPropertyValue('--primary-h').trim()
+    const primaryS = getComputedStyle(root).getPropertyValue('--primary-s').trim()
+    const primaryL = getComputedStyle(root).getPropertyValue('--primary-l').trim()
+    const compH = getComputedStyle(root).getPropertyValue('--comp-h').trim()
+    const compS = getComputedStyle(root).getPropertyValue('--comp-s').trim()
+    const compL = getComputedStyle(root).getPropertyValue('--comp-l').trim()
+
+    // Parse lightness values (remove % if present)
+    const primaryLNum = parseFloat(primaryL.replace('%', ''))
+    const compLNum = parseFloat(compL.replace('%', ''))
+
+    const primaryLHover = Math.min(100, primaryLNum + 15)
+    const compLHover = Math.min(100, compLNum + 15)
+
+    const primaryHover = `hsl(${primaryH}, ${primaryS}, ${primaryLHover}%)`
+    const compHover = `hsl(${compH}, ${compS}, ${compLHover}%)`
+
+    // Get computed primary and complementary colors for comparison
+    const testEl = document.createElement('div')
+    testEl.style.setProperty('color', 'var(--color-primary)')
+    document.body.appendChild(testEl)
+    const primaryComputed = window.getComputedStyle(testEl).color
+    testEl.style.setProperty('color', 'var(--color-complementary)')
+    const compComputed = window.getComputedStyle(testEl).color
+    document.body.removeChild(testEl)
+
+    const setupHoverHandlers = () => {
+      // Find all rectangles that don't already have handlers
+      const rectangles = chartRef.current!.querySelectorAll('.recharts-rectangle:not([data-hover-setup])')
+      
+      rectangles.forEach((rect) => {
+        const element = rect as SVGPathElement
+        const fillAttr = element.getAttribute('fill') || ''
+        const computedFill = window.getComputedStyle(element).fill
+        
+        // Determine which bar series this belongs to
+        let isPrimary = false
+        if (fillAttr === 'var(--color-primary)' || fillAttr.includes('--color-primary')) {
+          isPrimary = true
+        } else if (fillAttr === 'var(--color-complementary)' || fillAttr.includes('--color-complementary')) {
+          isPrimary = false
+        } else {
+          // Compare computed colors (normalize RGB to compare)
+          const normalizedComputed = computedFill.replace(/\s+/g, '')
+          const normalizedPrimary = primaryComputed.replace(/\s+/g, '')
+          const normalizedComp = compComputed.replace(/\s+/g, '')
+          isPrimary = normalizedComputed === normalizedPrimary
+        }
+        
+        const hoverColor = isPrimary ? primaryHover : compHover
+        const originalFill = fillAttr || computedFill
+        
+        const handleMouseEnter = () => {
+          element.style.fill = hoverColor
+        }
+        
+        const handleMouseLeave = () => {
+          element.style.fill = originalFill
+        }
+        
+        element.addEventListener('mouseenter', handleMouseEnter)
+        element.addEventListener('mouseleave', handleMouseLeave)
+        element.setAttribute('data-hover-setup', 'true')
+        
+        // Store original fill and handlers for cleanup
+        ;(element as any)._originalFill = originalFill
+        ;(element as any)._hoverHandlers = { handleMouseEnter, handleMouseLeave }
+      })
+    }
+
+    // Wait for chart to render, then setup handlers
+    let timeoutId = setTimeout(setupHoverHandlers, 150)
+
+    // Setup handlers when DOM changes (chart re-renders)
+    const observer = new MutationObserver(() => {
+      // Debounce to avoid excessive calls
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(setupHoverHandlers, 50)
+    })
+
+    if (chartRef.current) {
+      observer.observe(chartRef.current, { childList: true, subtree: true })
+    }
+
+    return () => {
+      clearTimeout(timeoutId)
+      observer.disconnect()
+      
+      // Clean up event listeners
+      const rectangles = chartRef.current?.querySelectorAll('.recharts-rectangle[data-hover-setup]')
+      rectangles?.forEach((rect) => {
+        const element = rect as SVGPathElement
+        const handlers = (element as any)._hoverHandlers
+        if (handlers) {
+          element.removeEventListener('mouseenter', handlers.handleMouseEnter)
+          element.removeEventListener('mouseleave', handlers.handleMouseLeave)
+          element.removeAttribute('data-hover-setup')
+        }
+      })
+    }
+  }, [isDark, mode, activeFilter])
 
   return (
     <Card className="h-full flex flex-col">
@@ -46,8 +159,9 @@ export function BarChartDemo() {
         </div>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <ResponsiveContainer width="100%" height="100%" className="min-h-[200px]">
-          <BarChart data={data}>
+        <div ref={chartRef} className="w-full h-full">
+          <ResponsiveContainer width="100%" height="100%" className="min-h-[200px]">
+            <BarChart data={data}>
             <XAxis
               dataKey="name"
               tick={{ 
@@ -68,29 +182,60 @@ export function BarChartDemo() {
               }}
             />
             <Tooltip
-              contentStyle={{
-                backgroundColor: isDark 
-                  ? "rgba(30, 41, 59, 0.95)" 
-                  : "rgba(255, 255, 255, 0.95)",
-                border: isDark 
-                  ? "1px solid rgba(255,255,255,0.1)" 
-                  : "1px solid rgba(0,0,0,0.1)",
-                borderRadius: "8px",
-                color: isDark ? "white" : "black",
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null
+                const primaryColor = isDark 
+                  ? "hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) + 15%))"
+                  : "hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) - 15%))"
+                const compColor = isDark
+                  ? "hsl(var(--comp-h), var(--comp-s), calc(var(--comp-l) + 15%))"
+                  : "hsl(var(--comp-h), var(--comp-s), calc(var(--comp-l) - 15%))"
+                return (
+                  <div style={{
+                    backgroundColor: isDark ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 255, 255, 0.7)",
+                    border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.1)",
+                    borderRadius: "6px",
+                    fontSize: "11px",
+                    padding: "6px 10px",
+                    lineHeight: "1.3",
+                    backdropFilter: "blur(4px)",
+                  }}>
+                    <div style={{
+                      fontWeight: 500,
+                      marginBottom: "2px",
+                      color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
+                    }}>{label}</div>
+                    {payload.map((entry, index) => (
+                      <div key={index} style={{
+                        color: entry.dataKey === "value1" ? primaryColor : compColor,
+                        padding: "1px 0",
+                        fontWeight: 600,
+                      }}>
+                        {entry.dataKey} : {entry.value}
+                      </div>
+                    ))}
+                  </div>
+                )
+              }}
+              cursor={{ 
+                fill: isDark 
+                  ? "rgba(255, 255, 255, 0.03)" 
+                  : "rgba(0, 0, 0, 0.03)" 
               }}
             />
             <Bar
               dataKey="value1"
               fill="var(--color-primary)"
-              radius={[4, 4, 0, 0]}
+              radius={[barRadius, barRadius, 0, 0]}
             />
             <Bar
               dataKey="value2"
               fill="var(--color-complementary)"
-              radius={[4, 4, 0, 0]}
+              radius={[barRadius, barRadius, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>
+        </div>
       </CardContent>
     </Card>
   )

@@ -2,18 +2,45 @@
 
 import { Card } from "@/components/ui/card"
 import { useTheme } from "@/components/theme-context"
-import { MoreVertical } from "lucide-react"
+import { useColorTheme } from "@/components/color-picker/color-context"
+import { 
+  DropdownMenu, 
+  DropdownTrigger, 
+  DropdownContent, 
+  DropdownItem, 
+  DropdownSeparator,
+  DropdownLabel 
+} from "@/components/ui/dropdown-menu"
+import { MoreVertical, User, Settings, Share2, Bell, LogOut } from "lucide-react"
 import Image from "next/image"
+import { useToast } from "@/components/ui/toast"
 
 /**
  * User Profile Card - Radix Themes Layout
  * 
  * Implements Radix Themes Community design patterns from Figma frame 58764-4121.
  * Minimalist profile card with profile picture, tags, and menu icon.
+ * 
+ * DROPDOWN DEMO: Click the ellipsis (⋮) button to see the dropdown menu in action.
  */
 export function UserProfileCard() {
   const { mode } = useTheme()
+  const { theme } = useColorTheme()
+  const { addToast } = useToast()
   const isDark = mode === "dark"
+  
+  // Use lighter tones (tints) for dark mode, darker tones (shades) for light mode
+  // Index 2 = 30% mix, provides good contrast
+  const tagColor = isDark ? theme.tints[2] : theme.shades[2]
+
+  const handleMenuAction = (action: string) => {
+    addToast({
+      title: `${action}`,
+      description: `You clicked "${action}" - this is a demo action`,
+      variant: "success",
+      duration: 2500,
+    })
+  }
   
   return (
     <Card className="p-6 h-full flex flex-col">
@@ -30,17 +57,54 @@ export function UserProfileCard() {
           />
         </div>
         
-        {/* Menu Icon - Aligned with Avatar */}
-        <button
-          className={`p-1.5 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] -mt-1 ${
-            isDark ? "hover:bg-white/10" : "hover:bg-gray-200"
-          }`}
-          aria-label="More options"
-        >
-          <MoreVertical className={`w-4 h-4 ${
-            isDark ? "text-white/60" : "text-gray-600"
-          }`} />
-        </button>
+        {/* Menu Icon - Dropdown Demo */}
+        <DropdownMenu>
+          <DropdownTrigger
+            className={`p-1.5 rounded-md transition-all duration-200 ease-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] -mt-1 ${
+              isDark ? "hover:bg-white/10" : "hover:bg-gray-200"
+            }`}
+          >
+            <MoreVertical className={`w-4 h-4 ${
+              isDark ? "text-white/60" : "text-gray-600"
+            }`} />
+          </DropdownTrigger>
+          <DropdownContent align="end" sideOffset={6}>
+            <DropdownLabel>Profile Actions</DropdownLabel>
+            <DropdownItem 
+              icon={<User className="w-4 h-4" />}
+              onClick={() => handleMenuAction("View Profile")}
+            >
+              View Profile
+            </DropdownItem>
+            <DropdownItem 
+              icon={<Settings className="w-4 h-4" />}
+              onClick={() => handleMenuAction("Edit Settings")}
+            >
+              Edit Settings
+            </DropdownItem>
+            <DropdownItem 
+              icon={<Share2 className="w-4 h-4" />}
+              onClick={() => handleMenuAction("Share Profile")}
+            >
+              Share Profile
+            </DropdownItem>
+            <DropdownSeparator />
+            <DropdownItem 
+              icon={<Bell className="w-4 h-4" />}
+              onClick={() => handleMenuAction("Mute Notifications")}
+            >
+              Mute Notifications
+            </DropdownItem>
+            <DropdownSeparator />
+            <DropdownItem 
+              icon={<LogOut className="w-4 h-4" />}
+              onClick={() => handleMenuAction("Sign Out")}
+              destructive
+            >
+              Sign Out
+            </DropdownItem>
+          </DropdownContent>
+        </DropdownMenu>
       </div>
 
       {/* Name and Title - Below Profile Picture */}
@@ -62,23 +126,21 @@ export function UserProfileCard() {
         {/* Top row: Two tags side by side */}
         <div className="flex gap-2">
           <span
-            className={`px-3 py-1.5 rounded-md text-xs font-medium border bg-transparent ${
-              isDark
-                ? "border-[var(--color-primary)]/60 text-[var(--color-primary)]/90"
-                : "border-[var(--color-primary-darker)]/60 text-[var(--color-primary-darker)]"
-            }`}
-            style={isDark ? { filter: 'brightness(1.3)' } : {}}
+            className="px-3 py-1.5 rounded-md text-xs font-medium border bg-transparent"
+            style={{ 
+              borderColor: `${tagColor}99`, // 60% opacity
+              color: tagColor 
+            }}
             role="listitem"
           >
             UI UX Designer
           </span>
           <span
-            className={`px-3 py-1.5 rounded-md text-xs font-medium border bg-transparent ${
-              isDark
-                ? "border-[var(--color-primary)]/60 text-[var(--color-primary)]/90"
-                : "border-[var(--color-primary-darker)]/60 text-[var(--color-primary-darker)]"
-            }`}
-            style={isDark ? { filter: 'brightness(1.3)' } : {}}
+            className="px-3 py-1.5 rounded-md text-xs font-medium border bg-transparent"
+            style={{ 
+              borderColor: `${tagColor}99`, // 60% opacity
+              color: tagColor 
+            }}
             role="listitem"
           >
             Product Management
@@ -88,12 +150,11 @@ export function UserProfileCard() {
         {/* Bottom row: Single tag aligned left */}
         <div className="flex gap-2">
           <span
-            className={`px-3 py-1.5 rounded-md text-xs font-medium border bg-transparent ${
-              isDark
-                ? "border-[var(--color-primary)]/60 text-[var(--color-primary)]/90"
-                : "border-[var(--color-primary-darker)]/60 text-[var(--color-primary-darker)]"
-            }`}
-            style={isDark ? { filter: 'brightness(1.3)' } : {}}
+            className="px-3 py-1.5 rounded-md text-xs font-medium border bg-transparent"
+            style={{ 
+              borderColor: `${tagColor}99`, // 60% opacity
+              color: tagColor 
+            }}
             role="listitem"
           >
             AI Engineer
