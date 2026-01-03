@@ -16,7 +16,10 @@ const config: StorybookConfig = {
 
   framework: {
     name: "@storybook/nextjs-vite",
-    options: {}
+    options: {
+      // Disable Next.js SWC loader to avoid compatibility issues
+      nextConfigPath: undefined,
+    }
   },
 
   staticDirs: ["../public"],
@@ -27,6 +30,13 @@ const config: StorybookConfig = {
         ...config.resolve.alias,
         '@': path.resolve(__dirname, '..'),
       };
+    }
+    // Exclude Next.js SWC loader from Vite build
+    if (config.optimizeDeps) {
+      config.optimizeDeps.exclude = [
+        ...(config.optimizeDeps.exclude || []),
+        '@storybook/nextjs',
+      ];
     }
     return config;
   }
