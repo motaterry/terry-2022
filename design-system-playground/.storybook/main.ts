@@ -23,6 +23,9 @@ const config: StorybookConfig = {
   },
 
   staticDirs: ["../public"],
+  
+  // Configure base path for serving Storybook from /storybook route
+  base: './',
 
   viteFinal: async (config) => {
     if (config.resolve) {
@@ -30,12 +33,15 @@ const config: StorybookConfig = {
         ...config.resolve.alias,
         '@': path.resolve(__dirname, '..'),
       };
+      // Prevent Storybook from trying to use webpack loader
+      config.resolve.alias['@storybook/nextjs'] = false;
     }
     // Exclude Next.js SWC loader from Vite build
     if (config.optimizeDeps) {
       config.optimizeDeps.exclude = [
         ...(config.optimizeDeps.exclude || []),
         '@storybook/nextjs',
+        'next/dist/build/swc',
       ];
     }
     return config;
