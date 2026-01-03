@@ -25,13 +25,7 @@ export default function Home() {
               <Link href="/token-generator">Generate Design Tokens</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <a
-                href="http://localhost:6006"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open Storybook
-              </a>
+              <Link href="/storybook">Open Storybook</Link>
             </Button>
           </div>
 
