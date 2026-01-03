@@ -93,13 +93,53 @@ export async function GET(
     }
 
     // Read and serve the file
-    const content = await readFile(filePath);
+    let content = await readFile(filePath);
     const mimeType = getMimeType(filePath);
+
+    // If serving HTML, rewrite relative paths to absolute paths
+    if (mimeType === 'text/html') {
+      let htmlContent = content.toString('utf-8');
+      
+      // Rewrite relative paths (./ and ../) to absolute paths under /storybook
+      htmlContent = htmlContent.replace(
+        /(href|src)=["'](\.\/|\.\.\/)([^"']+)["']/g,
+        (match, attr, prefix, path) => {
+          // Remove leading ./ or ../
+          const cleanPath = path.replace(/^\.\.?\//, '');
+          return `${attr}="/storybook/${cleanPath}"`;
+        }
+      );
+      
+      // Also handle paths without ./ prefix that are relative (but not absolute or external)
+      htmlContent = htmlContent.replace(
+        /(href|src)=["'](?!https?:\/\/|\/|#|javascript:)([^"']+)["']/g,
+        (match, attr, path) => {
+          // Skip if already absolute, external, anchor, or javascript
+          if (path.startsWith('/') || path.startsWith('http') || path.startsWith('#') || path.startsWith('javascript:')) {
+            return match;
+          }
+          return `${attr}="/storybook/${path}"`;
+        }
+      );
+      
+      // Also rewrite script src attributes
+      htmlContent = htmlContent.replace(
+        /<script([^>]*)\ssrc=["'](\.\/|\.\.\/)([^"']+)["']/g,
+        (match, attrs, prefix, path) => {
+          const cleanPath = path.replace(/^\.\.?\//, '');
+          return `<script${attrs} src="/storybook/${cleanPath}"`;
+        }
+      );
+      
+      content = Buffer.from(htmlContent, 'utf-8');
+    }
 
     return new NextResponse(content, {
       headers: {
         'Content-Type': mimeType,
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': mimeType === 'text/html' 
+          ? 'public, max-age=0, must-revalidate' 
+          : 'public, max-age=31536000, immutable',
       },
     });
   } catch (error) {
