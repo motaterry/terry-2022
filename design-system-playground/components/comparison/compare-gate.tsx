@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import { Lock, Shield, AlertCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -129,7 +130,7 @@ export function CompareGate({
       >
         {lockedImageUrl && (
           <div className="absolute inset-0 z-0">
-            <img src={lockedImageUrl} alt={lockedImageAlt} className="w-full h-full object-cover opacity-50" />
+            <Image src={lockedImageUrl} alt={lockedImageAlt} fill className="object-cover opacity-50" />
           </div>
         )}
 

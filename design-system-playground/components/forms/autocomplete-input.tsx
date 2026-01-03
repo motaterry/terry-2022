@@ -149,8 +149,8 @@ export const AutocompleteInput = forwardRef<AutocompleteInputHandle, Autocomplet
           e.preventDefault()
           if (highlightedIndex >= 0 && highlightedIndex < filteredSuggestions.length) {
             const selected = filteredSuggestions[highlightedIndex]
-            handleSelect(selected)
-          } else if (filteredSuggestions.length === 1) {
+            if (selected) handleSelect(selected)
+          } else if (filteredSuggestions.length === 1 && filteredSuggestions[0]) {
             handleSelect(filteredSuggestions[0])
           }
           break

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { ArrowRight, TrendingUp, TrendingDown, Minus } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -52,9 +53,9 @@ export function NDVICard({
   return (
     <Card className={cn("border border-border shadow-md hover:shadow-lg transition-shadow", className)}>
       {showImage && (
-        <div className="w-full h-48 bg-muted flex items-center justify-center border-b border-border mb-6">
+        <div className="w-full h-48 bg-muted flex items-center justify-center border-b border-border mb-6 relative">
           {imageUrl ? (
-            <img src={imageUrl} alt={imageAlt || title} className="w-full h-full object-cover" />
+            <Image src={imageUrl} alt={imageAlt || title} fill className="object-cover" />
           ) : (
             <span className="text-muted-foreground text-xs font-medium">Image Placeholder</span>
           )}

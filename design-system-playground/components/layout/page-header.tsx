@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { ArrowLeft, Filter } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -70,7 +71,7 @@ export function PageHeader({
             {backLabel}
           </Button>
           {showLogo && logoUrl && (
-            <img src={logoUrl} alt={logoAlt} className="h-7 md:h-8 w-auto opacity-60" />
+            <Image src={logoUrl} alt={logoAlt} width={32} height={32} className="h-7 md:h-8 w-auto opacity-60" />
           )}
         </div>
 

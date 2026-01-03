@@ -11,7 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 const hslToHex = (hsl: string): string => {
   try {
     const parts = hsl.trim().split(/\s+/)
-    if (parts.length !== 3) return "#000000"
+    // Default black color - necessary for color conversion utility
+    if (parts.length !== 3 || !parts[0] || !parts[1] || !parts[2]) return "#000000"
     
     const h = parseFloat(parts[0])
     const s = parseFloat(parts[1]) / 100
@@ -44,6 +45,7 @@ const hslToHex = (hsl: string): string => {
 
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`
   } catch {
+    // Default black color - necessary for color conversion utility
     return "#000000"
   }
 }

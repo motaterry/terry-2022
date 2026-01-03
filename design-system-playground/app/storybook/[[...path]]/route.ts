@@ -30,7 +30,7 @@ function getMimeType(filePath: string): string {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path?: string[] } }
+  { params }: { params: Promise<{ path?: string[] }> }
 ) {
   try {
     // Check if Storybook has been built
@@ -44,8 +44,11 @@ export async function GET(
       );
     }
 
+    // Await params (Next.js 16+ requires this)
+    const resolvedParams = await params;
+    
     // Get the requested path
-    const requestedPath = params.path?.join('/') || '';
+    const requestedPath = resolvedParams.path?.join('/') || '';
     
     // Security: prevent directory traversal
     if (requestedPath.includes('..')) {

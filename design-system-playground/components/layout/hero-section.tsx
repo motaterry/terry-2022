@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 export interface HeroSectionProps {
@@ -35,12 +36,12 @@ export function HeroSection({
       {/* Background Image */}
       {backgroundImageUrl && (
         <div className="absolute inset-0 w-full h-full overflow-hidden">
-          <img
+          <Image
             src={backgroundImageUrl}
             alt={backgroundImageAlt}
-            className="w-full h-full object-cover"
-            loading="eager"
-            fetchPriority="high"
+            fill
+            className="object-cover"
+            priority
           />
           {/* Overlay */}
           <div
