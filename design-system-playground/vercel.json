@@ -2,6 +2,15 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps"
+  "installCommand": "npm install --legacy-peer-deps",
+  "rewrites": [
+    {
+      "source": "/storybook",
+      "destination": "/storybook-static/index.html"
+    },
+    {
+      "source": "/storybook/:path*",
+      "destination": "/storybook-static/:path*"
+    }
+  ]
 }
-
