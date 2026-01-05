@@ -1,18 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Ensure storybook files are served correctly
-  async rewrites() {
+  // Redirect /storybook to /storybook/ to fix relative path resolution
+  async redirects() {
     return [
-      // Rewrite /storybook to serve index.html
       {
         source: '/storybook',
-        destination: '/storybook/index.html',
-      },
-      // Rewrite /storybook/ to serve index.html
-      {
-        source: '/storybook/',
-        destination: '/storybook/index.html',
+        destination: '/storybook/',
+        permanent: true,
       },
     ];
   },

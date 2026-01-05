@@ -3,14 +3,11 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "npm install --legacy-peer-deps",
-  "rewrites": [
+  "redirects": [
     {
       "source": "/storybook",
-      "destination": "/storybook/index.html"
-    },
-    {
-      "source": "/storybook/",
-      "destination": "/storybook/index.html"
+      "destination": "/storybook/",
+      "permanent": true
     }
   ],
   "headers": [
