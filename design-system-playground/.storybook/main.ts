@@ -29,6 +29,9 @@ const config: StorybookConfig = {
   base: '/storybook/',
 
   viteFinal: async (config) => {
+    // Set base path for Vite build to serve from /storybook/
+    config.base = '/storybook/';
+    
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
