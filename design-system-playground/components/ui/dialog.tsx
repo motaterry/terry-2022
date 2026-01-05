@@ -52,6 +52,11 @@ export interface DialogContentProps
   extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof dialogContentVariants> {
   /**
+   * Size variant of the dialog
+   * @default 'md'
+   */
+  size?: 'sm' | 'md' | 'lg' | 'fullscreen'
+  /**
    * Whether to show the close button (X) in the header
    * @default true
    */

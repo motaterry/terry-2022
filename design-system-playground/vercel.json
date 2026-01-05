@@ -2,23 +2,5 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps",
-  "redirects": [
-    {
-      "source": "/storybook",
-      "destination": "/storybook/",
-      "permanent": true
-    }
-  ],
-  "headers": [
-    {
-      "source": "/storybook/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ]
+  "installCommand": "npm install --legacy-peer-deps"
 }

@@ -24,13 +24,7 @@ const config: StorybookConfig = {
 
   staticDirs: ["../public"],
   
-  // Configure base path for serving Storybook from /storybook route
-  // Use absolute path so assets load correctly
-  base: '/storybook/',
-
   viteFinal: async (config) => {
-    // Set base path for Vite build to serve from /storybook/
-    config.base = '/storybook/';
     
     if (config.resolve) {
       config.resolve.alias = {
